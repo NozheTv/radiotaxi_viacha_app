@@ -1,5 +1,6 @@
 package com.example.a31deenero
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun loginCliente(email: String, password: String) {
-        val url = "http://172.16.8.95/radiotaxi_viacha_mvc/public/api/login_cliente.php"
+        val url = "http://172.16.11.53/radiotaxi_viacha_mvc/public/api/login_cliente.php"
         val queue: RequestQueue = Volley.newRequestQueue(this)
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
@@ -46,6 +47,12 @@ class MainActivity : AppCompatActivity() {
         val request = JsonObjectRequest(Request.Method.POST, url, jsonBody,
             { response ->
                 Toast.makeText(this, "Logueado: " + response.getString("message"), Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, Selector::class.java)
+                startActivity(intent)
+
+                // Opcional: Finalizar la actividad actual para evitar regresar al login
+                finish()
             },
             { error ->
                 // Mostrar mensaje básico
