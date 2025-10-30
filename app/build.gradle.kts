@@ -47,7 +47,8 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
 // SDK Volley
     implementation("com.mapbox.maps:android-ndk27:11.16.0")
-// SDK Maps
+// SDK Mapbox
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
