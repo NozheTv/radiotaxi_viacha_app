@@ -1,14 +1,12 @@
 package com.example.a31deenero
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
@@ -18,15 +16,30 @@ import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.Style
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.animation.easeTo
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
+import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
+import com.mapbox.maps.plugin.locationcomponent.location
 import org.json.JSONObject
 
+import com.mapbox.maps.plugin.annotation.AnnotationConfig
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin
+import com.mapbox.maps.plugin.annotation.annotations
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+
+
 class PedirViaje : AppCompatActivity() {
+
+    private lateinit var pointAnnotationManager: PointAnnotationManager
 
     private lateinit var mapView: MapView
     private var origenLatLng: Point? = null
     private var destinoLatLng: Point? = null
     private lateinit var btnConfirmarDestino: Button
+
+    private var hasCenteredCamera = false
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -53,6 +66,9 @@ class PedirViaje : AppCompatActivity() {
 
         // Inicialización Mapbox
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS) {
+
+            pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
+
             // Configura componente de ubicación si permisos otorgados
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -72,7 +88,21 @@ class PedirViaje : AppCompatActivity() {
         // Lógica para seleccionar destino al tocar el mapa
         mapView.getMapboxMap().addOnMapClickListener { point ->
             destinoLatLng = Point.fromLngLat(point.longitude(), point.latitude())
-            // Opcional: colocar un marcador de destino o ajustar la cámara
+
+            // Limpiar anotaciones anteriores para mantener solo una
+            pointAnnotationManager.deleteAll()
+
+            // Carga el bitmap desde drawable (reemplaza 'tu_icono' por tu recurso)
+            val bitmap = android.graphics.BitmapFactory.decodeResource(resources, R.drawable.ubi)
+
+            // Crea la anotación con el punto y el icono
+            val pointAnnotationOptions = PointAnnotationOptions()
+                .withPoint(destinoLatLng!!)
+                .withIconImage(bitmap)
+
+            // Añade la anotación al mapa
+            pointAnnotationManager.create(pointAnnotationOptions)
+
             mapView.getMapboxMap().easeTo(
                 CameraOptions.Builder()
                     .center(destinoLatLng)
@@ -83,6 +113,8 @@ class PedirViaje : AppCompatActivity() {
             true
         }
 
+
+
         // Botón confirmar destino
         btnConfirmarDestino.setOnClickListener {
             if (origenLatLng != null && destinoLatLng != null) {
@@ -91,9 +123,6 @@ class PedirViaje : AppCompatActivity() {
                 Toast.makeText(this, "Debe seleccionar origen y destino", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // Intent local para obtener la ubicación actual si ya tienes un helper
-        obtenerUbicacionActual()
     }
 
     private fun pedirPermisosUbicacion() {
@@ -105,36 +134,31 @@ class PedirViaje : AppCompatActivity() {
         )
     }
 
-    // Habilita el componente de ubicación (asegúrate de que tus permisos ya están concedidos)
     private fun enableLocationComponent() {
-        // Este método debería activar el layout de la ubicación si usas el plugin de Mapbox
-        // La implementación exacta depende de la versión de Mapbox Maps SDK que uses.
-        // A continuación se ilustra un enfoque simplificado:
-        // mapView.location.nextLocation() // ejemplo ficticio si usas un helper real
-        // Aquí agregas un marcador o simplemente centras la cámara en origen una vez obtenido
-        // Si ya tienes otro helper, módalo para que establezca origenLatLng y mueva la cámara.
-    }
+        // Configura y muestra el puck de ubicación con orientación
+        mapView.location.locationPuck = createDefault2DPuck(withBearing = true)
+        mapView.location.enabled = true
+        mapView.location.puckBearingEnabled = true
 
-    private fun obtenerUbicacionActual() {
-        // Implementa tu obtención real de la ubicación (FusedLocationProviderClient, etc.)
-        // Este ejemplo usa una ubicación simulada para evitar dependencias adicionales.
-        origenLatLng =
-            Point.fromLngLat(-68.148, -16.496) // Reemplaza con la ubicación real al obtenerla
-
-        // Centrar mapa en origen si se obtuvo
-        origenLatLng?.let {
-            mapView.getMapboxMap().setCamera(
-                CameraOptions.Builder()
-                    .center(it)
-                    .zoom(14.0)
-                    .build()
-            )
-            Toast.makeText(this, "Ubicación de origen establecida", Toast.LENGTH_SHORT).show()
-        }
+        // Listener para centrar cámara solo la primera vez que se recibe ubicación
+        mapView.location.addOnIndicatorPositionChangedListener(object : OnIndicatorPositionChangedListener {
+            override fun onIndicatorPositionChanged(point: Point) {
+                if (!hasCenteredCamera) {
+                    origenLatLng = Point.fromLngLat(point.longitude(), point.latitude())
+                    mapView.getMapboxMap().setCamera(
+                        CameraOptions.Builder()
+                            .center(origenLatLng)
+                            .zoom(14.0)
+                            .build()
+                    )
+                    hasCenteredCamera = true
+                    Toast.makeText(this@PedirViaje, "Ubicación de origen establecida", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     private fun realizarPedido() {
-        // Construir el JSON para tu API PHP
         val jsonBody = JSONObject().apply {
             put("id_cliente", 1) // Reemplaza con el ID del usuario actual
             put("origen_latitud", origenLatLng?.latitude())
@@ -144,7 +168,7 @@ class PedirViaje : AppCompatActivity() {
             put("prioridad", false)
         }
 
-        val url = "http://172.16.8.142/radiotaxi_viacha_mvc/public/api/pedido.php" // Reemplaza con tu endpoint real
+        val url = "http://172.16.11.26/radiotaxi_viacha_mvc/public/api/pedido.php" // Reemplaza con tu endpoint real
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonBody,
@@ -153,7 +177,6 @@ class PedirViaje : AppCompatActivity() {
                 val tarifa = response.optDouble("tarifa", Double.NaN)
                 val tarifaStr = if (tarifa.isNaN()) "" else "\nTarifa: $tarifa"
                 Toast.makeText(this, "Pedido creado: $mensaje$tarifaStr", Toast.LENGTH_LONG).show()
-                // Opcional: navegar a otra Activity o limpiar UI
                 finish()
             },
             { error ->
