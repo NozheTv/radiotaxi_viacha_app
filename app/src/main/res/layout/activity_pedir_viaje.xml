@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    style="@style/AppBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo_gradiente"
     tools:context=".PedirViaje">
 
     <com.mapbox.maps.MapView
@@ -24,6 +26,8 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:text="Confirmar Destino"
+        android:background="@drawable/btn_gradient"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
