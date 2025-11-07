@@ -33,10 +33,25 @@ class MainActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
+
+            if (email.isEmpty()) {
+                emailField.error = "Por favor ingresa tu correo"
+                emailField.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (password.isEmpty()) {
+                passwordField.error = "Por favor ingresa tu contraseña"
+                passwordField.requestFocus()
+                return@setOnClickListener
+            }
+
             loginCliente(email, password)
         }
 
+
     }
+
     private fun loginCliente(email: String, password: String) {
         val url = "http://172.16.11.26/radiotaxi_viacha_mvc/public/api/login_cliente.php"
         val queue: RequestQueue = Volley.newRequestQueue(this)
