@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    style="@style/AppBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo_gradiente"
+    tools:context=".Sobre_nosotros">
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="QUIENES SOMOS"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.049" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="¡Bienvenido a Radio Taxi Viacha! 💚
+Somos mucho más que un servicio de transporte — somos tu compañero de viaje cada día.
+
+✨ Nuestra misión es ofrecerte un servicio seguro, rápido y confiable, con conductores capacitados y vehículos en perfectas condiciones, para que llegues a tu destino con total tranquilidad.
+
+📱 Gracias a nuestra app moderna y fácil de usar, puedes pedir tu taxi en segundos, seguir tu viaje en tiempo real y disfrutar de una experiencia cómoda y segura.
+
+🔒 Tu seguridad es nuestra prioridad, y por eso trabajamos con tecnología y monitoreo constante para que viajes sin preocupaciones.
+
+🌟 En Radio Taxi Viacha, combinamos tradición, confianza y tecnología para brindarte la mejor experiencia de transporte en la ciudad.
+
+💬 Tu destino, nuestra prioridad. ¡Súbete y viaja con nosotros! 🚗💨"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
