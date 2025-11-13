@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginCliente(email: String, password: String) {
-        val url = "http://172.16.11.26/radiotaxi_viacha_mvc/public/api/login_cliente.php"
+        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/login_cliente.php"
         val queue: RequestQueue = Volley.newRequestQueue(this)
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
@@ -61,13 +61,22 @@ class MainActivity : AppCompatActivity() {
 
         val request = JsonObjectRequest(Request.Method.POST, url, jsonBody,
             { response ->
-                Toast.makeText(this, "Logueado: " + response.getString("message"), Toast.LENGTH_SHORT).show()
+                try {
+                    val message = response.getString("message")
+                    val user = response.getJSONObject("user")
+                    val clienteId = user.getString("id")
 
-                val intent = Intent(this, Selector::class.java)
-                startActivity(intent)
+                    Toast.makeText(this, "Logueado: $message", Toast.LENGTH_SHORT).show()
 
-                // Opcional: Finalizar la actividad actual para evitar regresar al login
-                finish()
+                    val intent = Intent(this, Selector::class.java)
+                    intent.putExtra("ID_CLIENTE", clienteId)
+                    startActivity(intent)
+                    finish()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error al procesar respuesta JSON", Toast.LENGTH_LONG).show()
+                }
+
             },
             { error ->
                 // Mostrar mensaje básico

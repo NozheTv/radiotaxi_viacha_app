@@ -21,11 +21,16 @@ class Selector : AppCompatActivity() {
         val btnPedirViaje = findViewById<Button>(R.id.btnPedirViaje)
         val btnHistorial = findViewById<Button>(R.id.btnHistorial)
         val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarCesion)
+        val clienteId = intent.getStringExtra("ID_CLIENTE") ?: ""
+
+
 
         // Navegar a la pantalla para pedir viaje
         btnPedirViaje.setOnClickListener {
             val intent = Intent(this, PedirViaje::class.java)
+            intent.putExtra("ID_CLIENTE", clienteId)  // clienteId desde el login o almacenado
             startActivity(intent)
+
         }
 
         // Navegar al historial de viajes

@@ -17,24 +17,6 @@
         android:theme="@style/Theme._31DeEnero"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Sobre_nosotros"
-            android:exported="false" />
-        <activity
-            android:name=".Estado_taxi"
-            android:exported="false" />
-        <activity
-            android:name=".Historial_cliente"
-            android:exported="false" />
-        <activity
-            android:name=".Principal_cliente"
-            android:exported="false" />
-        <activity
-            android:name=".Costo_viaje"
-            android:exported="false" />
-        <activity
-            android:name=".Pedir_taxi"
-            android:exported="false" />
-        <activity
             android:name=".Registro_cliente"
             android:exported="false" />
         <activity
