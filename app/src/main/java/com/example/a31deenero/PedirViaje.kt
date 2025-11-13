@@ -178,7 +178,7 @@ class PedirViaje : AppCompatActivity() {
             put("prioridad", switchPrioridad.isChecked)
         }
 
-        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/pedido.php" // Reemplaza con tu endpoint real
+        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/pedido.php"
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonBody,

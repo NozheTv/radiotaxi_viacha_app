@@ -15,6 +15,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,13 @@ class MainActivity : AppCompatActivity() {
         val emailField = findViewById<EditText>(R.id.etEmail)
         val passwordField = findViewById<EditText>(R.id.etPassword)
         val loginButton = findViewById<Button>(R.id.btnLogin)
+        val registerButton = findViewById<Button>(R.id.btnRegister)
+
+        registerButton.setOnClickListener {
+            val intent = Intent(this, Registro_cliente::class.java)
+            startActivity(intent)
+        }
+
 
         loginButton.setOnClickListener {
             val email = emailField.text.toString().trim()

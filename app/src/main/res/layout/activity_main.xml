@@ -65,4 +65,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.703" />
 
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="219dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn_gradient"
+        android:text="Registrarse"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.831" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
