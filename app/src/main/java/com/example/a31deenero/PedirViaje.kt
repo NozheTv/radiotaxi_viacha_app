@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +39,7 @@ class PedirViaje : AppCompatActivity() {
     private var origenLatLng: Point? = null
     private var destinoLatLng: Point? = null
     private lateinit var btnConfirmarDestino: Button
+    private lateinit var switchPrioridad: Switch
 
     private var hasCenteredCamera = false
 
@@ -63,6 +65,8 @@ class PedirViaje : AppCompatActivity() {
 
         mapView = findViewById(R.id.mapView)
         btnConfirmarDestino = findViewById(R.id.btnConfirmarDestino)
+        switchPrioridad = findViewById(R.id.switchPrioridad)
+
 
         // Inicialización Mapbox
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS) {
@@ -159,16 +163,22 @@ class PedirViaje : AppCompatActivity() {
     }
 
     private fun realizarPedido() {
+        val clienteId = intent.getStringExtra("ID_CLIENTE")
+        if(clienteId == null || clienteId.isEmpty()){
+            Toast.makeText(this, "ID cliente no disponible", Toast.LENGTH_LONG).show()
+            finish()  // o manejar la falta de id según convenga
+            return
+        }
         val jsonBody = JSONObject().apply {
-            put("id_cliente", 1) // Reemplaza con el ID del usuario actual
+            put("id_cliente", clienteId.toInt())
             put("origen_latitud", origenLatLng?.latitude())
             put("origen_longitud", origenLatLng?.longitude())
             put("destino_latitud", destinoLatLng?.latitude())
             put("destino_longitud", destinoLatLng?.longitude())
-            put("prioridad", false)
+            put("prioridad", switchPrioridad.isChecked)
         }
 
-        val url = "http://172.16.11.26/radiotaxi_viacha_mvc/public/api/pedido.php" // Reemplaza con tu endpoint real
+        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/pedido.php" // Reemplaza con tu endpoint real
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonBody,
