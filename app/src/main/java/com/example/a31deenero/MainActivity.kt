@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginCliente(email: String, password: String) {
-        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/login_cliente.php"
+        val url = "http://10.0.9.136/radiotaxi_viacha_mvc/public/api/login_cliente.php"
         val queue: RequestQueue = Volley.newRequestQueue(this)
         val jsonBody = JSONObject()
         jsonBody.put("email", email)

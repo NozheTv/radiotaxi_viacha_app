@@ -32,6 +32,7 @@ class Registro_cliente : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         etName = findViewById(R.id.etName)
         etEmail = findViewById(R.id.etEmail)
         etTelefono = findViewById(R.id.editTextNumber)
@@ -46,28 +47,51 @@ class Registro_cliente : AppCompatActivity() {
             val direccion = etDireccion.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
+            // Validaciones de campos
             if (nombre.isEmpty()) {
                 etName.error = "Por favor ingresa tu nombre"
                 etName.requestFocus()
                 return@setOnClickListener
             }
+
             if (email.isEmpty()) {
                 etEmail.error = "Por favor ingresa tu correo"
                 etEmail.requestFocus()
                 return@setOnClickListener
             }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.error = "Correo inválido"
+                etEmail.requestFocus()
+                return@setOnClickListener
+            }
+
             if (telefono.isEmpty()) {
                 etTelefono.error = "Por favor ingresa tu teléfono"
                 etTelefono.requestFocus()
                 return@setOnClickListener
             }
+
+            if (!telefono.matches(Regex("^[67]\\d{7}\$"))) {
+                etTelefono.error = "Teléfono inválido. Debe tener 8 dígitos y comenzar con 6 o 7"
+                etTelefono.requestFocus()
+                return@setOnClickListener
+            }
+
             if (direccion.isEmpty()) {
                 etDireccion.error = "Por favor ingresa tu dirección"
                 etDireccion.requestFocus()
                 return@setOnClickListener
             }
+
             if (password.isEmpty()) {
                 etPassword.error = "Por favor ingresa tu contraseña"
+                etPassword.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (password.length < 6) {
+                etPassword.error = "La contraseña debe tener al menos 6 caracteres"
                 etPassword.requestFocus()
                 return@setOnClickListener
             }
@@ -76,6 +100,7 @@ class Registro_cliente : AppCompatActivity() {
             registerCliente(nombre, email, telefono, direccion, password)
         }
     }
+
     private fun registerCliente(
         nombre: String,
         email: String,
@@ -83,7 +108,7 @@ class Registro_cliente : AppCompatActivity() {
         direccion: String,
         password: String
     ) {
-        val url = "http://192.168.100.45/radiotaxi_viacha_mvc/public/api/register.php" // Ajusta según tu URL
+        val url = "http://10.0.9.136/radiotaxi_viacha_mvc/public/api/register.php" // Ajusta según tu URL
         val queue: RequestQueue = Volley.newRequestQueue(this)
         val jsonBody = JSONObject().apply {
             put("nombre", nombre)
